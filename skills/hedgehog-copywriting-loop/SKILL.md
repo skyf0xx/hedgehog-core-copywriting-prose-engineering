@@ -120,7 +120,7 @@ Run once. This core has no bootstrap step: `hedgehog init --copywriting`
 lands `scripts/check-copy/` and `core.yaml` together, as this package's
 `workspace/`, at install time — before planning intake ever starts. This
 is the one core `planner`'s generic Workflow step 9 does not hand off to
-`bootstrap` for; step 5 below runs `hedgehog plan` directly instead,
+`bootstrap` for; step 6 below runs `hedgehog plan` directly instead,
 since the core.yaml it needs is already on disk. Opens with
 `hedgehog-planning-intake`'s Phase 0 (step 1 below). After that Phase 0
 completes, this section does its own thin mining pass — what's being
@@ -151,7 +151,42 @@ Add-ons decision on full-stack-app).
    `keepsake_format = "markdown-only"` in
    `_bmad/custom/bmad-brainstorming.toml`; this core doesn't set it by
    default, since some copywriting projects do want the visual keepsake.
-2. **Mine a draft brief** from `.hedgehog/BMAD/`: what's being written
+2. **Gate every option BMAD presented, before mining reads any of
+   them.** `bmad-brainstorming` (and `bmad-forge-idea`'s own option
+   round, where it runs one) surfaces multiple headlines/hooks/angles
+   for the user to choose between as part of its own interactive run —
+   this loop doesn't control that moment, so it can't intercept an
+   option before the user first sees it. What it can and must do is
+   treat those options as ungated the instant that BMAD skill hands
+   control back, since they're prose the user may ship close to
+   verbatim and haven't touched `checkCopy()` yet. Before doing anything
+   else with `.hedgehog/BMAD/`'s freshly-written output, extract every
+   option BMAD presented and run each one through `checkCopy()`
+   (imported from `scripts/check-copy/index.mjs`, the same function the
+   `draft` layer calls later — not the CLI, to avoid a process spawn per
+   option) with `{ format: 'prose' }`: the copy type isn't decided until
+   step 4 below, so this pass runs the universal AI-tell and
+   prose-quality contract only, the same one every copy type's format
+   contract only ever adds to. For each option that comes back
+   `pass: false`, regenerate that option against its own violation
+   report, up to 3 attempts, and re-present the cleaned option to the
+   user (BMAD's own archived copy stays as written, per the immutability
+   rule below — the regenerated text lives in this loop's own working
+   state, not a hand-edit of `.hedgehog/BMAD/`). If it still doesn't
+   pass after 3, present it anyway rather than dropping it — a strong
+   option that trips a prose nit is still worth the user seeing — but
+   mark it, inline, with which check it failed, so the user is choosing
+   with that visible rather than being handed silently-dirty copy. If
+   the user already picked an option before this pass could run (BMAD's
+   flow may not leave a gap to intervene in), gate the picked option
+   immediately after and surface the result before moving on to mining,
+   rather than skipping the gate because the moment to show alternatives
+   has passed. This does not replace the `draft` layer's own gate:
+   whichever option the user picks still goes through the full
+   `checkCopy()` run against its real `type:` format contract once step
+   4 mines it, since a prose-only pass here can't see a tweet's
+   character limit or an ad's required CTA.
+3. **Mine a draft brief** from `.hedgehog/BMAD/`: what's being written
    (the concrete piece — a landing page section, a product announcement,
    a UI microcopy string, docs prose), its copy type, the audience, and
    the register to write in, sourced from the product brief and PR-FAQ
@@ -171,7 +206,7 @@ Add-ons decision on full-stack-app).
    genuinely unresolved, ask directly — don't proceed on vagueness, and
    don't invent an audience or register that wasn't stated, mined, or
    confirmed.
-3. **Write `.hedgehog/copy/00-brief.md`** — the mined what/type/audience/
+4. **Write `.hedgehog/copy/00-brief.md`** — the mined what/type/audience/
    register, in plain terms. The copy type goes in as a `type:` line at
    the start of the file, on its own line, with one of the values from
    "Copy types" above:
@@ -182,7 +217,7 @@ Add-ons decision on full-stack-app).
    contract, so a brief with no `type:` line is gated as `prose`. This is the root the `draft` layer's
    `copy-writer` agent works from; it draws from BMAD's archive but is
    its own file, not a pointer into `.hedgehog/BMAD/`.
-4. **Confirm & Lock** — show the mined brief back in plain terms,
+5. **Confirm & Lock** — show the mined brief back in plain terms,
    alongside which BMAD skills ran and where their output lives
    (`.hedgehog/BMAD/`), before writing anything to the build graph.
    Show the copy type alongside the rest, and say which format contract
@@ -196,14 +231,14 @@ Add-ons decision on full-stack-app).
    Wait for explicit go-ahead — a revision here is just another mining
    pass against the same BMAD archive, not a Correction Protocol entry,
    since nothing downstream exists yet.
-5. **Add the intent and compile the graph**: `hedgehog intent add --id
+6. **Add the intent and compile the graph**: `hedgehog intent add --id
    copy --goal "<what's being written>" --outcome "<audience + register>"`
    — one call, no `--rule`/`--depends-on` needed; copywriting has no
    module axis, so this single intent is what `hedgehog plan` compiles
    against this core's `core.yaml` into the two layer tasks. Run
    `hedgehog plan` next, then `hedgehog status` to show the compiled
    chain.
-6. **Commit planning intake's output as one commit**,
+7. **Commit planning intake's output as one commit**,
    `chore(planning): copy brief` — the committed intent
    (`.hedgehog/intents/copy.json`), `.hedgehog/BMAD/`, and
    `.hedgehog/copy/00-brief.md` together.
