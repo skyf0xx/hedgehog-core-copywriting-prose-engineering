@@ -1,6 +1,6 @@
 {
   "name": "@skyf0xx/hedgehog-core-copywriting-prose-engineering",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Hedgehog's copywriting core: a mechanical checkCopy() gate against AI-tell and prose-quality contracts, the tells-detector and prose-quality skills that define them, and the copy-writer loop that drafts against the gate until it passes.",
   "type": "module",
   "scripts": {
