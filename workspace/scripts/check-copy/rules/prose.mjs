@@ -57,6 +57,11 @@ const WEASEL_IGNORE = [
 const SENTENCE_SPLIT = /[.!?]+[\s\n]+/;
 const NOMINALIZATION = /\b\w+(tion|ment|ance|ence)s?\b/gi;
 
+// General-audience ceiling. Looser than landing-page's 60-word mobile
+// ceiling (`format/wall-of-text`) since this runs on any prose regardless
+// of medium, but a paragraph past this is a grey slab wherever it ships.
+const MAX_PARAGRAPH_WORDS = 100;
+
 function excerptAround(text, index, length, radius = 40) {
   const start = Math.max(0, index - radius);
   const end = Math.min(text.length, index + length + radius);
@@ -114,6 +119,25 @@ export async function checkProse(text, { wordCount }) {
       location: {},
     });
   }
+
+  // Paragraph length: a wall of text reads as dense and mechanical
+  // regardless of medium, and it's the same defect `format/wall-of-text`
+  // catches on landing pages specifically — this is the universal version.
+  const paragraphs = text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+  paragraphs.forEach((paragraph, index) => {
+    if (paragraph.startsWith('#') || paragraph.startsWith('|')) return;
+    const count = paragraph.split(/\s+/).filter(Boolean).length;
+    if (count > MAX_PARAGRAPH_WORDS) {
+      violations.push({
+        rule: 'prose/wall-of-text',
+        grain: 'paragraph',
+        severity: 'warning',
+        message: `Paragraph runs ${count} words; over ${MAX_PARAGRAPH_WORDS} reads as a wall of text — break it up`,
+        excerpt: excerptAround(paragraph, 0, Math.min(paragraph.length, 60)),
+        location: { paragraph: index },
+      });
+    }
+  });
 
   // retext pipeline: passive voice, weasel words, repeated words, readability.
   const processor = unified()

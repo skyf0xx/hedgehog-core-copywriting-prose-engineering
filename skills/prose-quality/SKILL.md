@@ -57,6 +57,11 @@ reimplementation of syllable counting or sentence tokenization.
   nouns": turning a verb into an abstract noun ("implementation" for
   "implement") removes the actor and adds length without adding
   meaning.
+- **`prose/wall-of-text`** — a single paragraph over 100 words. A wall of
+  text reads as dense and mechanical regardless of medium — this is the
+  universal counterpart to the `landing-page` format's tighter 60-word
+  mobile ceiling (`format/wall-of-text` in `rules/formats/landing-page.mjs`),
+  and applies to every draft the gate checks, not just that one format.
 
 ## Enumeration reads better as a list
 
