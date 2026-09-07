@@ -81,3 +81,16 @@ test('flags a short standalone fragment that restates the prior sentence for emp
   const report = await checkCopy(text);
   assert.ok(report.violations.some((v) => v.rule === 'tells/emphatic-fragment'));
 });
+
+test('flags a paragraph over 100 words as a wall of text', async () => {
+  const sentence = 'The team shipped the feature and tested it carefully before release. ';
+  const text = sentence.repeat(15);
+  const report = await checkCopy(text);
+  assert.ok(report.violations.some((v) => v.rule === 'prose/wall-of-text' && v.severity === 'warning'));
+});
+
+test('does not flag a paragraph under 100 words', async () => {
+  const text = `Every handoff between Slack and your ticket tracker drops something. A decision made in chat never makes it into the ticket. We built a single feed that both tools write to. Comments sync both ways.`;
+  const report = await checkCopy(text);
+  assert.ok(!report.violations.some((v) => v.rule === 'prose/wall-of-text'));
+});
