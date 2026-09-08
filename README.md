@@ -1,5 +1,7 @@
 # PROSE Engineering for Better Copy ⭐
 
+![AI writes. Code judges. — Prose Engineering](https://raw.githubusercontent.com/skyf0xx/hedgehog-core-copywriting-prose-engineering/master/assets/prose.jpg)
+
 ### Programmatic Rules for Optimized Style & Expression
 
 <table>
