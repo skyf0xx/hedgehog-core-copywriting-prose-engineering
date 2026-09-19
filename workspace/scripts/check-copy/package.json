@@ -25,6 +25,6 @@
     "unified": "^11.0.5",
     "unist-util-visit": "^5.1.0",
     "write-good": "^1.0.8",
-    "zod": "^4.5.4"
+    "zod": "^4.6.5"
   }
 }
