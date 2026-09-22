@@ -25,32 +25,20 @@ contract.
   voice, weasel words, readability score, sentence-length variance,
   nominalization density.
 
-The two above are universal and run against every draft. The four below
-document the per-format contracts (`format/*`), each selected by the
-brief's `type:` field. Read the one matching the copy type before
-drafting, since a format contract shapes the draft rather than only
-grading it afterwards.
-
-- **`ad-copy`** (`type: ad`) — Meta ad copy: the three fields and their
-  character limits, the 125-character "See more" fold, and the
-  compliance claims that get an ad account suspended.
-- **`landing-page-copy`** (`type: landing-page`) — short-form bridge and
-  pre-sell pages: the three-paragraph framework, message match from the
-  ad, and mobile-first formatting.
-- **`direct-response-copy`** (`type: direct-response`) — long-form sales
-  copy, VSLs, and email: headlines, open loops, the slippery slide, and
-  the classic frameworks behind them.
-- **`tweet-copy`** (`type: tweet`) — a single post on X: the hook
-  formulas, the 280-character limit and how X actually counts it, and
-  the engagement patterns that suppress reach.
+The two above are universal and run against every draft. Four more
+skills — `ad-copy`, `landing-page-copy`, `direct-response-copy`,
+`tweet-copy` — each document one per-format contract (`format/*`); the
+brief's `type:` field selects exactly one per project. Read the skill
+matching the copy type before drafting, since a format contract shapes
+the draft rather than only grading it afterwards — see the skill files
+themselves for what each one covers.
 
 ### The agent
 
 `copy-writer` runs the `draft` layer: reads the locked brief and its
 `type:`, drafts into `.hedgehog/copy/final.md`, and iterates against the
-gate until it passes or a real conflict surfaces. It never presents a
-draft that hasn't actually been run through `scripts/check-copy`, and
-never drops or switches `--format` to get a passing report.
+gate until it passes or a real conflict surfaces. See that agent file
+for the full constraint set, including the `--format` rule.
 
 ## The constants (do not deviate)
 
@@ -72,12 +60,7 @@ The AI-tell and prose contracts run either way; the format contract adds
 what those rules cannot see, which is whether the copy obeys the medium
 it ships into. A 446-character post is a defect no prose rule can catch,
 because nothing about its sentences is wrong. `metrics.format` in the
-report names the contract that ran. Built on `retext` (passive
-voice, weasel words, repeated words, readability), `write-good` (wordy
-phrases, clichés), `flesch`/`flesch-kincaid` (document-level readability
-scores), and a custom AI-tell rule set (`scripts/check-copy/rules/tells.mjs`)
-— not hand-rolled grammar or syllable-counting logic. `zod`
-(`scripts/check-copy/report.mjs`) validates the report's shape.
+report names the contract that ran.
 
 This core ships one fixed rule set per format — general-audience
 defaults (Flesch Reading Ease floor of 50, Flesch-Kincaid grade ceiling
