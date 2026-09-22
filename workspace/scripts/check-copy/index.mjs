@@ -13,6 +13,13 @@
 // limit, a required structural slot, a banned compliance claim) — checks
 // the prose rules cannot make, because nothing about the sentences
 // themselves is wrong. Defaults to `prose`, which adds nothing.
+//
+// Built on `retext` (passive voice, weasel words, repeated words,
+// readability), `write-good` (wordy phrases, clichés),
+// `flesch`/`flesch-kincaid` (document-level readability scores), and a
+// custom AI-tell rule set (`rules/tells.mjs`) — not hand-rolled grammar
+// or syllable-counting logic. `zod` (`report.mjs`) validates the report's
+// shape.
 
 import { readFile } from 'node:fs/promises';
 import { checkTells } from './rules/tells.mjs';
