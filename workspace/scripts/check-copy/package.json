@@ -23,8 +23,8 @@
     "retext-stringify": "^4.0.0",
     "syllable": "^5.0.1",
     "unified": "^11.0.5",
-    "unist-util-visit": "^5.1.0",
+    "unist-util-visit": "^5.2.0",
     "write-good": "^1.0.8",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
   }
 }
