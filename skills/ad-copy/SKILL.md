@@ -211,17 +211,20 @@ is also the thing to test most.
 
 | Type | Shape | Use when |
 |---|---|---|
-| Curiosity | "There's a reason your doctor won't mention this" | Cold, unaware |
+| Curiosity | "There's a reason [the usual source] won't mention [the topic]" | Cold, unaware |
 | Contrarian | "Everything you've been told about X is wrong" | Problem-aware, skeptical |
-| Social proof | "Over 47,000 women have tried this 30-second trick" | Solution-aware and up |
-| Story | "Last March I was 40 lbs overweight and my doctor said" | Cold, emotional markets |
+| Social proof | "Over [count from the brief] [audience] have tried [named method]" | Solution-aware and up |
+| Story | "Last [month] I [real starting situation from the brief] and [what was said]" | Cold, emotional markets |
 | Demographic callout | "Attention men over 50 who..." | Cold, tightly targeted |
-| Result | "I lost 23 lbs in 8 weeks without giving up pizza" | Warm, retargeting |
+| Result | "I [real result from the brief] in [timeframe] without [real tradeoff avoided]" | Warm, retargeting |
 | Pattern interrupt | "Stop scrolling. This actually matters." | Cold, saturated markets |
 | Fascinating fact | "Your liver processes 500+ chemicals before breakfast" | Unaware, education-first |
 
 Hook rules:
 
+- Every figure, person, and result in a hook comes from the brief or its
+  source material; the bracketed slots above are filled from there, never
+  invented.
 - The first line of text (or the first three seconds of video) has to
   arrest attention on its own.
 - Keep the curiosity fragmented and open-ended. A complete fascination

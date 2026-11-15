@@ -86,8 +86,8 @@ survives the transition.
   it down with the ad. The fix is to qualify the claim or cut it, never
   to reword around the pattern while keeping the promise.
 
-Two of these are errors and block the gate: `format/missing-headline`,
-`format/missing-cta`, plus every `format/unqualified-claim` match. The
+Three rules are errors and block the gate: `format/missing-headline`,
+`format/missing-cta`, and every `format/unqualified-claim` match. The
 rest are warnings, real signal weighed against the brief per the
 copywriting loop's step 3.
 
@@ -121,26 +121,28 @@ An expert authority has found something new about the problem.
 What goes in it:
 
 - A named authority figure (a doctor, a scientist, a researcher) or a
-  credible institution.
+  credible institution, taken only from the brief's source material.
+  When the brief names none, leave a marked placeholder and report the
+  gap; never invent one.
 - A specific novel root cause. The symptom restated does nothing.
 - Visceral language that makes the cause feel physical and present.
 - A named mechanism that sounds proprietary and particular.
 
-The shape, in the register that works:
+The shape, with placeholders filled only from the brief's source
+material:
 
-> Researchers at a Boston university have found a toxic film that
-> forms around the pancreas in type 2 diabetics, built from clingy
-> zombie cells that shut down insulin production.
+> [Named institution or expert from the brief] has found [specific
+> root cause from the brief], [the mechanism, in concrete terms].
 
-> Top scientist reveals a simple 7-second "glucose flush" that helps
-> manage high blood sugar, and it has nothing to do with diet,
-> exercise, or medication.
+> [Titled source from the brief] reveals a simple [named mechanism]
+> that helps [outcome from the brief], and it has nothing to do with
+> [the usual fix].
 
 Authority plus specificity plus novelty. The reader's reaction is that
 this sounds credible and also different from everything already tried.
-Authority patterns that carry weight: a titled expert ("top doctor",
-"leading eye specialist"), a research group at a named institution, a
-named individual with geographic specificity.
+Authority patterns that carry weight: a titled expert, a research group
+at a named institution, a named individual with geographic specificity.
+Every one of them has to exist in the brief or its sources.
 
 ### Paragraph 2: social proof (results plus benefits)
 
@@ -148,17 +150,17 @@ Real people are already getting results from this method.
 
 What goes in it:
 
-- A specific count. "257,000 people" beats "thousands of people"
-  every time, and it also satisfies `format/missing-proof`.
+- A specific count taken from the brief. "257,000 people" beats
+  "thousands of people" every time, and it also satisfies `format/missing-proof`.
 - Tangible results with a timeframe attached.
 - The pain point being resolved, named in the reader's words.
 - Optionally a named testimonial with a location.
 
-> Over 257,000 people have already worked this morning habit into
-> their routine, and the test results keep coming back the same way.
+> [Count from the brief] people have already [habit or action], and
+> [result from the brief] keeps coming back the same way.
 
-> Tasha Bailey from Birmingham was told there was no fix. Seven weeks
-> later her blood test levels all sit inside the normal range.
+> [Named customer from the brief] was told there was no fix. [Timeframe
+> from the brief] later, [specific result from the brief].
 
 Proof strength runs in a rough order. A named testimonial with a photo,
 specific results, and a location sits at the top. Below it, verified
@@ -287,10 +289,10 @@ The headline sits above the body and sets up the three paragraphs. Keep
 it under 90 characters so `format/headline-length` stays quiet and the
 line stays readable on a phone.
 
-- **Authority plus mechanism plus benefit**: "Top doctor: do this to
-  normalize blood sugar"
-- **Percentage plus discovery**: "97% of people have never heard of
-  this A1C hack"
+- **Authority plus mechanism plus benefit**: "[Brief's named expert]:
+  do this to [outcome]"
+- **Percentage plus discovery**: "[Percentage from the brief] of people have
+  never heard of [named discovery]"
 - **Mechanism plus timeframe**: "Simple 7-second glucose flush helps
   manage high blood sugar"
 - **Question**: "Can one enzyme restore normal blood sugar?"
