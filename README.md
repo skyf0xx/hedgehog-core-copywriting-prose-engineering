@@ -19,8 +19,6 @@
 </tr>
 </table>
 
-</details>
-
 ## How Prose Engineering Works
 
 Every AI copywriting tool makes the same promise: better copy.
@@ -64,7 +62,7 @@ passes.
 
 ```mermaid
 flowchart LR
-    Draft --> Check{checkProse}
+    Draft --> Check{checkCopy}
     Check -- fail --> Fix[AI fixes it]
     Fix --> Check
     Check -- pass --> Publish
@@ -92,7 +90,7 @@ Prose Engineering catches things even a human can miss.
 ## Easy to install and use
 
 Ask your agent:
-*"Install Prose Engeering, then help me write about ..."*
+*"Install Prose Engineering, then help me write about ..."*
 
 <details>
 <summary>For your agent</summary>
