@@ -15,19 +15,15 @@ copy that merely looks clean on your own read of it.
 
 `.hedgehog/copy/00-brief.md` — what's being written, for whom, and in
 what register. Read-only once this layer starts; a brief that turns
-out wrong is a Correction Protocol case handled at its source, not
+out wrong is a Correction Protocol case (`hedgehog-orchestrating`'s procedure) handled at its source, not
 patched around here.
 
 The brief's `type:` field names the copy type, and decides which format
-contract the gate runs alongside the universal ones:
-
-| `type:` | Format contract | Reference skill |
-| --- | --- | --- |
-| `prose` (default) | none beyond the universal pair | — |
-| `ad` | Meta field limits, CTA, compliance claims | `ad-copy` |
-| `landing-page` | headline, CTA, proof, mobile paragraph length | `landing-page-copy` |
-| `direct-response` | CTA, specificity, vague-benefit, proof | `direct-response-copy` |
-| `tweet` | 280-character limit, hashtags, engagement bait | `tweet-copy` |
+contract the gate runs alongside the universal ones; the values and what
+each gates on are listed in `hedgehog-copywriting-loop`'s "Copy types".
+Read the reference skill that table names for the brief's type before
+drafting. A `premium: true` line on a tweet brief lifts the 280-character
+limit to X Premium's 25,000.
 
 A brief with no `type:` is `prose`. Never pick a format the brief did
 not name: if the brief says `tweet` and the request reads like a landing
@@ -41,13 +37,11 @@ here.
    for the brief's copy type before drafting, since the format contract
    shapes the draft rather than merely grading it afterwards.
 2. Draft into `.hedgehog/copy/final.md`.
-3. Run the gate, passing the brief's `type:` as `--format` (omit the
-   flag, or pass `prose`, when the brief names no type):
+3. Run the gate. `--brief` reads the format (and Premium) from the
+   brief, so the invocation is the same for every copy type:
    ```
-   node scripts/check-copy/index.mjs .hedgehog/copy/final.md --format <type>
+   node scripts/check-copy/index.mjs .hedgehog/copy/final.md --brief .hedgehog/copy/00-brief.md
    ```
-   On `type: tweet`, add `--premium` only where the brief says the
-   account is on X Premium; without it the 280-character limit applies.
 4. Read the JSON report.
    - `pass: false` — at least one error-severity violation. Fix the
      actual thing each violation names (see `tells-detector` and
@@ -77,7 +71,7 @@ here.
 - Never invent a voice-profile exception ad hoc. The gate's default
   thresholds are this core's one fixed contract; a real mismatch is
   reported to the user, not bypassed per-draft.
-- Never drop or switch `--format` to get a passing report. Running a
+- Never drop `--brief`, or override the format it reads, to get a passing report. Running a
   tweet through the `prose` contract hides the character limit rather
   than meeting it, which is the exact failure the format rules exist to
   catch.
@@ -87,9 +81,9 @@ here.
 ## Self-test
 
 - `scripts/check-copy/index.mjs` was actually run against the final
-  draft, with the `--format` matching the brief's `type:`, and its JSON
+  draft, with `--brief` pointing at the locked brief, and its JSON
   output (not a paraphrase of it) is what's being reported. The
-  report's `metrics.format` confirms which contract ran.
+  report's `metrics.format` matches the brief's `type:`.
 - Every error-severity violation from the last run is resolved; every
   warning was weighed, not reflexively silenced.
 - The draft matches the brief's named register and audience.

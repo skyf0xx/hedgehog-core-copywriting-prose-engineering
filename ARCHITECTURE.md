@@ -15,7 +15,7 @@ A piece of copy ships because a script exited 0, the same trust model
 - `workspace/scripts/check-copy/` — the gate, copied to
   `scripts/check-copy/` at the root of every project this core installs
   into. `index.mjs` is the CLI entry
-  (`node scripts/check-copy/index.mjs <file> [--format <type>]`),
+  (`node scripts/check-copy/index.mjs <file> --brief <brief.md>`),
   `rules/tells.mjs` is the AI-tell rule set (banned vocabulary,
   negation formulas, hedge stacks, structural density checks),
   `rules/prose.mjs` is the prose-quality rule set (passive voice, weasel
@@ -35,9 +35,9 @@ A piece of copy ships because a script exited 0, the same trust model
 - `workspace/core.yaml` — the two-layer chain (`brief` → `draft`) a
   Hedgehog install compiles into its build graph, copied to the root of
   every project this core installs into alongside `scripts/check-copy/`.
-  The `draft` layer's verify reads the copy type from the brief's
-  `type:` field and passes it to the gate as `--format`, falling back to
-  `prose` when the brief names none.
+  The `draft` layer's verify passes the brief to the gate as `--brief`,
+  which reads the copy type from the `type:` field (and Premium from
+  `premium: true`), falling back to `prose` when the brief names none.
 - `agents/copy-writer.md` — drafts copy and iterates it against the
   gate until it passes or a real conflict with the brief surfaces.
 - `skills/hedgehog-copywriting-loop/` — the operating loop: brief
@@ -64,12 +64,13 @@ this core installed into (against `scripts/check-copy/`):
 ```
 cd scripts/check-copy && npm install   # or workspace/scripts/check-copy in this repo
 node index.mjs path/to/draft.md
-node index.mjs path/to/post.md --format tweet
+node index.mjs path/to/post.md --brief path/to/brief.md
 node index.mjs path/to/post.md --format tweet --premium
 ```
 
 Exits 0 with `pass: true` in the JSON report when no error-severity
-violation fired; exits 1 with `pass: false` otherwise. `--format` takes
+violation fired; exits 1 with `pass: false` otherwise. `--brief` reads the format and Premium from a brief; `--format`
+takes
 `prose` (the default), `ad`, `landing-page`, `direct-response`, or
 `tweet`, and an unrecognised value exits 2 rather than silently falling
 back. The report's `metrics.format` names the contract that ran.

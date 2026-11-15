@@ -5,7 +5,8 @@
 // a validated report to stdout, exit 1 if any error-severity violation
 // fired — a real gate the copy-writer loop cannot talk its way past.
 //
-// Usage: node index.mjs <file> [--format <name>] [--premium]
+// Usage: node index.mjs <file> --brief <brief.md>
+//        node index.mjs <file> [--format <name>] [--premium]
 //        cat draft.md | node index.mjs -
 //
 // The tells and prose contracts are universal and always run. --format
@@ -13,6 +14,9 @@
 // limit, a required structural slot, a banned compliance claim) — checks
 // the prose rules cannot make, because nothing about the sentences
 // themselves is wrong. Defaults to `prose`, which adds nothing.
+//
+// --brief reads the format from the brief's `type:` line and Premium from
+// its `premium: true` line; an explicit --format or --premium wins.
 //
 // Built on `retext` (passive voice, weasel words, repeated words,
 // readability), `write-good` (wordy phrases, clichés),
@@ -66,8 +70,20 @@ export async function checkCopy(text, { format = 'prose', premium = false } = {}
   });
 }
 
+export function readBriefOptions(briefText) {
+  const field = (name) => {
+    const match = briefText.match(new RegExp(`^${name}:[ \\t]*(.*?)[ \\t]*$`, 'mi'));
+    return match ? match[1].toLowerCase() : undefined;
+  };
+  const type = field('type');
+  return {
+    format: type && FORMAT_NAMES.includes(type) ? type : 'prose',
+    premium: field('premium') === 'true',
+  };
+}
+
 function parseArgs(argv) {
-  const options = { file: undefined, format: 'prose', premium: false };
+  const options = { file: undefined, format: undefined, premium: undefined, brief: undefined };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === '--format') {
@@ -76,6 +92,10 @@ function parseArgs(argv) {
       options.format = arg.slice('--format='.length);
     } else if (arg === '--premium') {
       options.premium = true;
+    } else if (arg === '--brief') {
+      options.brief = argv[++i];
+    } else if (arg.startsWith('--brief=')) {
+      options.brief = arg.slice('--brief='.length);
     } else if (options.file === undefined) {
       options.file = arg;
     }
@@ -85,6 +105,9 @@ function parseArgs(argv) {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
+  const fromBrief = options.brief ? readBriefOptions(await readFile(options.brief, 'utf8')) : {};
+  options.format ??= fromBrief.format ?? 'prose';
+  options.premium ??= fromBrief.premium ?? false;
 
   if (!FORMAT_NAMES.includes(options.format)) {
     process.stderr.write(`check-copy: unknown format "${options.format}" — expected one of: ${FORMAT_NAMES.join(', ')}\n`);

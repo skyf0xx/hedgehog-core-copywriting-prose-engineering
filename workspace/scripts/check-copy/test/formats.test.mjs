@@ -9,7 +9,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { checkCopy } from '../index.mjs';
+import { checkCopy, readBriefOptions } from '../index.mjs';
 
 const rules = (report) => report.violations.map((v) => v.rule);
 
@@ -221,4 +221,14 @@ test('the default format adds nothing, and is recorded in the report metrics', a
 
 test('an unknown format is rejected rather than silently skipped', async () => {
   await assert.rejects(() => checkCopy('some copy', { format: 'billboard' }), /unknown format/);
+});
+
+test('readBriefOptions reads type and premium from the brief', () => {
+  assert.deepEqual(readBriefOptions('type: tweet\npremium: true\n\nA post.'), { format: 'tweet', premium: true });
+  assert.deepEqual(readBriefOptions('Brief\ntype:   Ad  \n'), { format: 'ad', premium: false });
+});
+
+test('readBriefOptions falls back to prose for a missing or unknown type', () => {
+  assert.deepEqual(readBriefOptions('No fields here.'), { format: 'prose', premium: false });
+  assert.deepEqual(readBriefOptions('type: poem'), { format: 'prose', premium: false });
 });

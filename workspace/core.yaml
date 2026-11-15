@@ -16,13 +16,13 @@ layers:
   - id: draft
     depends_on: brief
     scope: [".hedgehog/copy/**", "scripts/check-copy/**"]
-    # The universal AI-tell and prose contracts always run. `--format`
+    # The universal AI-tell and prose contracts always run. `--brief`
     # adds the contract for the medium the copy ships into, read from the
-    # brief's `type:` field by the draft layer: character limits a
-    # platform enforces, structural slots the format is defined by, and
-    # claims an ad network bans. `prose` is the default and adds none of
-    # them, which is the behaviour this core had before formats existed.
-    # See hedgehog-copywriting-loop's "Copy types" for how the field is
-    # mined and what each value gates on.
-    verify: "node scripts/check-copy/index.mjs .hedgehog/copy/final.md --format \"$(sed -n 's/^type:[[:space:]]*//p' .hedgehog/copy/00-brief.md | head -1 | tr -d '[:space:]' | grep -E '^(prose|ad|landing-page|direct-response|tweet)$' || echo prose)\""
+    # brief's `type:` line (and `premium: true` for a tweet on X Premium):
+    # character limits a platform enforces, structural slots the format is
+    # defined by, and claims an ad network bans. A brief with no `type:`
+    # line is gated as `prose`, which adds none of them. See
+    # hedgehog-copywriting-loop's "Copy types" for the values and how the
+    # fields are mined.
+    verify: "node scripts/check-copy/index.mjs .hedgehog/copy/final.md --brief .hedgehog/copy/00-brief.md"
     commit: "feat(copy): draft"

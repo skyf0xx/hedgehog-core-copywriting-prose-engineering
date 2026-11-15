@@ -38,7 +38,7 @@ themselves for what each one covers.
 `copy-writer` runs the `draft` layer: reads the locked brief and its
 `type:`, drafts into `.hedgehog/copy/final.md`, and iterates against the
 gate until it passes or a real conflict surfaces. See that agent file
-for the full constraint set, including the `--format` rule.
+for the full constraint set, including the `--brief` rule.
 
 ## The constants (do not deviate)
 
@@ -48,14 +48,15 @@ for the full constraint set, including the `--format` rule.
 whether a draft is done:
 
 ```
-node scripts/check-copy/index.mjs <file> [--format <type>] [--premium]
+node scripts/check-copy/index.mjs <file> --brief <brief.md>
 ```
 
 Exits 0 and reports `pass: true` when no error-severity violation
 fired; exits 1 with `pass: false` otherwise.
 
-`--format` is one of `prose` (the default), `ad`, `landing-page`,
-`direct-response`, or `tweet`, and comes from the brief's `type:` field.
+`--brief` reads the format from the brief's `type:` field (values in
+`hedgehog-copywriting-loop`'s "Copy types") and X Premium from its
+`premium: true` line; `--format <type>` and `--premium` override them.
 The AI-tell and prose contracts run either way; the format contract adds
 what those rules cannot see, which is whether the copy obeys the medium
 it ships into. A 446-character post is a defect no prose rule can catch,
@@ -74,7 +75,7 @@ warning or error silently on a per-draft basis.
 
 ### Layout
 
-Everything below lives inside `$TMPDIR`, a temporary directory created
+Everything below lives inside `$SCRATCH`, a temporary directory created
 fresh per invocation and deleted once the loop finishes — see
 `hedgehog-copywriting-loop`'s "Phase -1: ephemeral scratch setup." None
 of it is visible in, or written to, the directory the user actually
@@ -90,15 +91,16 @@ scripts/check-copy/       the gate: index.mjs (CLI entry), rules/tells.mjs,
                              what register
     final.md                the draft under iteration, gated by check-copy
   hedgehog.db               the build graph — the copy intent, its two
-                             compiled layers, verifications, committed to git
+                             compiled layers, verifications; derived
+                             state, gitignored
 ```
 
 The one exception is `$ORIGDIR/<slugged-title>.md` — the courtesy
-export, dropped outside `$TMPDIR` entirely, at the directory the user
+export, dropped outside `$SCRATCH` entirely, at the directory the user
 was actually in when the loop started. It's a plain-file copy of
 `final.md`, written once draft verify passes, for a non-technical writer
 to find without knowing anything above exists. The gated artifact stays
-`.hedgehog/copy/final.md` inside `$TMPDIR`; this copy is never read back
+`.hedgehog/copy/final.md` inside `$SCRATCH`; this copy is never read back
 by anything in the loop.
 
 ### Core rule
